@@ -25,8 +25,8 @@ module Acts #:nodoc:
 
         before_validation :update_permalink #, on: [:create, :save]
 
-        validates_uniqueness_of @permalink_column_name
-        
+        validates_uniqueness_of @permalink_column_name, scope: :deleted_at
+                
         include Acts::Permalink::InstanceMethods
         extend Acts::Permalink::SingletonMethods
       end
