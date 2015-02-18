@@ -44,6 +44,7 @@ module Acts #:nodoc:
       end
 
       def scrub_text(obj, text)
+        link_length = obj.class.base_class.instance_variable_get('@permalink_length')
         # If it is blank then generate a random link
         if text.blank?
           text = obj.class.base_class.to_s.downcase + rand(10000).to_s
@@ -51,9 +52,10 @@ module Acts #:nodoc:
         # If it is not blank, scrub
         else
           text = text.downcase.strip                  # make the string lowercase and scrub white space on either side
-          text = text.gsub(/[^a-z0-9\w]/, "-")        # make any character that is not nupermic or alphabetic into an underscore
+          text = text.gsub(/[^a-z0-9\w]/, "-")        # make any character that is not nupermic or alphabetic into a dash
           text = text.sub(/_+$/, "").sub(/^_+/, "")   # remove underscores on either end, caused by non-simplified characters
-          text = text[0...obj.class.base_class.instance_variable_get('@permalink_length')]        # trim to length
+          text = text[0...link_length]                # trim to length
+          text = text.gsub(/\-$/, '')                 # remove dashes from end of line
         end
         text
       end
