@@ -11,7 +11,7 @@ describe Acts::Permalink do
       t = Post.new :title => "Test post 1!"
       t.permalink.should be_nil
       t.save!
-      t.permalink.should == "test_post_1"
+      t.permalink.should == "test-post-1"
     end
 
     it "should avoid a collision" do
@@ -38,7 +38,7 @@ describe Acts::Permalink do
 
     it "should create the permalink for the subclass" do
       t = SpecificThing.create! :title => "the title"
-      t.permalink.should == "the_title"
+      t.permalink.should == "the-title"
     end
 
   end
@@ -54,7 +54,7 @@ describe Acts::Permalink do
       t.other_permalink.should be_nil
       t.save!
       t.permalink.should be_nil
-      t.other_permalink.should == "other_post"
+      t.other_permalink.should == "other-post"
     end
   end
 
