@@ -38,9 +38,9 @@ module Acts #:nodoc:
       def apply_validations(options)
         before_validation :update_permalink, on: options[:on]
         if respond_to?(:deleted_at)
-          validates_uniqueness_of @permalink_column_name, scope: :deleted_at
+          validates_uniqueness_of @permalink_column_name, scope: Array(options[:scope]).unshift(:deleted_at)
         else
-          validates_uniqueness_of @permalink_column_name
+          validates_uniqueness_of @permalink_column_name, scope: options[:scope]
         end
       end
 
