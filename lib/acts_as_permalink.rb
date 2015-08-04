@@ -37,11 +37,16 @@ module Acts #:nodoc:
 
       def apply_validations(options)
         before_validation :update_permalink, on: options[:on]
-        if respond_to?(:deleted_at)
-          validates_uniqueness_of @permalink_column_name, scope: Array(options[:scope]).unshift(:deleted_at)
-        else
-          validates_uniqueness_of @permalink_column_name, scope: options[:scope]
+
+        uniqueness_options = { scope: options[:scope] }
+
+        if column_names.include?("deleted_at") # checks if acts_as_paranoid is being used
+          uniqueness_options.merge!(
+            conditions: -> { where('deleted_at is null') }
+          )
         end
+
+        validates_uniqueness_of @permalink_column_name, uniqueness_options
       end
 
       def set_var(key, value)
