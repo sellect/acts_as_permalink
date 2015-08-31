@@ -1,5 +1,5 @@
 module Acts
   module Permalink
-    VERSION = "0.4.1rc1"
+    VERSION = "0.4.3"
   end
 end

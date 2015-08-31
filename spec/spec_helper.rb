@@ -4,11 +4,9 @@ require 'active_support'
 require 'acts_as_permalink'
 
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
   # config.filter_run :focus
 end
-
 
 ## Manually setup the Active Record DB stuff and a test model
 
@@ -30,4 +28,22 @@ ActiveRecord::Base.connection.create_table(:things) do |t|
   t.string :title
   t.string :permalink
   t.string :type
+end
+
+## Dummy Classes
+
+class Post < ActiveRecord::Base
+  acts_as_permalink
+end
+
+class Thing < ActiveRecord::Base
+  acts_as_permalink
+end
+
+class SpecificThing < Thing
+end
+
+class OtherPost < ActiveRecord::Base
+  self.table_name = "posts"
+  acts_as_permalink to: :other_permalink, from: :other_title
 end
