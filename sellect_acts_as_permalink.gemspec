@@ -5,7 +5,7 @@ require "acts_as_permalink/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "acts_as_permalink"
+  s.name        = "sellect_acts_as_permalink"
   s.version     = Acts::Permalink::VERSION
   s.authors     = ["Kevin McPhillips"]
   s.email       = ["github@kevinmcphillips.ca"]
