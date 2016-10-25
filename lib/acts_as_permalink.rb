@@ -20,7 +20,7 @@ module Acts #:nodoc:
         options = DEFAULT_OPTIONS.merge(options)
         set_instance_variables(options)
         apply_validations(options)
-        
+
         include Acts::Permalink::InstanceMethods
       end
 
@@ -40,7 +40,8 @@ module Acts #:nodoc:
 
         uniqueness_options = { scope: options[:scope] }
 
-        if column_names.include?("deleted_at") # checks if acts_as_paranoid is being used
+        # checks if acts_as_paranoid is being used
+        if table_exists? && column_names.include?("deleted_at")
           uniqueness_options.merge!(
             conditions: -> { where('deleted_at is null') }
           )
@@ -54,7 +55,7 @@ module Acts #:nodoc:
       end
 
     end
-    
+
     module InstanceMethods
 
       # Generate the permalink and assign it directly via callback
