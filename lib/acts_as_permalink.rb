@@ -104,6 +104,8 @@ module Acts #:nodoc:
           text = text.gsub(/[^a-z0-9\w]/, "-")
           # remove dashes on either end, caused by non-simplified characters
           text = text.sub(/-+$/, "").sub(/^-+/, "")
+          # remove multiple dashes in a row
+          text = text.gsub(/-+/,"-")
           # trim to length
           text = text[0...get_var('@permalink_length')]
         end
