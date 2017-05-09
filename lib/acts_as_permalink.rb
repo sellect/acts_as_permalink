@@ -11,10 +11,15 @@ module Acts #:nodoc:
       DEFAULT_OPTIONS = {
         to: :permalink,
         from: :title,
+        on: :create,
         update_on_source_change: true,
         force_unique_naming: false,
         max_length: 60,
-        on: :create
+        character_substitutions: {
+          ampersand:  false,
+          slash:      false,
+          dot:        false
+        }
       }
 
       def acts_as_permalink(options={})
@@ -37,6 +42,8 @@ module Acts #:nodoc:
         set_var('@force_unique_naming', options[:force_unique_naming])
         # maximum length of the permalink
         set_var('@permalink_length', options[:max_length])
+        # options for character substitutions before scrubbing
+        set_var('@character_substitutions', options[:character_substitutions])
       end
 
       def apply_validations(options)
@@ -100,7 +107,9 @@ module Acts #:nodoc:
         else
           # make the string lowercase and scrub white space on either side
           text = text.downcase.strip
-          # make any character that is not nupermic or alphabetic into a dash
+          # substitute characters before further scrubbing
+          text = apply_character_substitutions(text)
+          # make any character that is not numeric or alphabetic into a dash
           text = text.gsub(/[^a-z0-9\w]/, "-")
           # remove dashes on either end, caused by non-simplified characters
           text = text.sub(/-+$/, "").sub(/^-+/, "")
@@ -110,6 +119,14 @@ module Acts #:nodoc:
           text = text[0...get_var('@permalink_length')]
         end
         text
+      end
+
+      def apply_character_substitutions(text)
+        sub_options = get_var('@character_substitutions')
+
+        text = text.gsub(/\&+/, "-and-")     if sub_options[:ampersand]
+        text = text.gsub(/\/+/, "-slash-")   if sub_options[:slash]
+        text = text.gsub(/\.+/, "-dot-")     if sub_options[:dot]
       end
 
       def ensure_uniqueness(text)
