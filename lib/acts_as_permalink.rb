@@ -100,7 +100,7 @@ module Acts #:nodoc:
         else
           # make the string lowercase and scrub white space on either side
           text = text.downcase.strip
-          # make any character that is not nupermic or alphabetic into a dash
+          # make any character that is not numeric or alphabetic into a dash
           text = text.gsub(/[^a-z0-9\w]/, "-")
           # remove dashes on either end, caused by non-simplified characters
           text = text.sub(/-+$/, "").sub(/^-+/, "")
