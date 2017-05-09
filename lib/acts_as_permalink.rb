@@ -12,6 +12,7 @@ module Acts #:nodoc:
         to: :permalink,
         from: :title,
         update_on_source_change: true,
+        force_unique_naming: false,
         max_length: 60,
         on: :create
       }
@@ -31,6 +32,9 @@ module Acts #:nodoc:
         set_var('@permalink_source', options[:from])
         # should permalink be updated when @permalink_source changes
         set_var('@update_on_source_change', options[:update_on_source_change])
+        # force error validation if existing object is found
+        # rather than adding numbers to permalink to save and bypass validation
+        set_var('@force_unique_naming', options[:force_unique_naming])
         # maximum length of the permalink
         set_var('@permalink_length', options[:max_length])
       end
@@ -101,6 +105,11 @@ module Acts #:nodoc:
       end
 
       def ensure_uniqueness(text)
+        # if we're forcing unique naming, we don't want numbered permalinks
+        # so we don't care if the object exists, we will just let the
+        # permalink validate as is (throwing validation error, if necessary)
+        return text if get_var('@force_unique_naming')
+
         found_object = find_by_permalink_column_name(text)
         if found_object && found_object != self
           # If we find the object we know there is a collision
