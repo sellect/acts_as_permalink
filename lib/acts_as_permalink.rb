@@ -58,6 +58,12 @@ module Acts #:nodoc:
         self.base_class.instance_variable_set(key, value)
       end
 
+      def find_object_by_permalink_from_text(text)
+        obj = self.new
+        obj.send("#{instance_variable_get('@permalink_source')}=", text)
+        send("find_by_#{instance_variable_get('@permalink_column_name')}", obj.generate_permalink)
+      end
+
     end
 
     module InstanceMethods
