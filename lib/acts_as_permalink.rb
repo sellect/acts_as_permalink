@@ -65,11 +65,21 @@ module Acts #:nodoc:
         self.base_class.instance_variable_set(key, value)
       end
 
-      def find_object_by_permalink_from_text(text)
+      def find_all_by_permalink_from_text(text)
         obj = self.new
         obj.send("#{instance_variable_get('@permalink_source')}=", text)
-        send("find_by_#{instance_variable_get('@permalink_column_name')}", obj.generate_permalink)
+
+        # contruct sql for where query so that we can find
+        # *all* possible records with this permalink
+        # e.g. "WHERE (sellect_option_values.permalink = 'blah')"
+        where_sql = "#{self.table_name}.#{instance_variable_get('@permalink_column_name')} = ?"
+        self.where(where_sql, obj.generate_permalink)
       end
+
+      def find_by_permalink_from_text(text)
+        find_all_by_permalink_from_text(text).first
+      end
+
 
     end
 
